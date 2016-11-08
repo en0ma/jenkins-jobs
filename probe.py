@@ -1,27 +1,27 @@
-from src/jenkins import Jenkins
-from src/job_repository import JobRepository
-import time
+from src.jenkins import Jenkins
+from src.job_repository import JobRepository
+from datetime import datetime
 
-class Probe(object):
+class Probe(Jenkins, JobRepository):
 
     def checkJobs(self):
         try:
-            jobs = Jenkins.listJobs()
+            jobs = Jenkins.listJobs(self)
             job_title = []
             job_status = []
             checked_at = []
-            timestamp = time.now()
+            current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
             for job in jobs:
-                job_title.append(job['title'])
-                job_status.append(job['status'])
-                checked_at.append(timestamp)
+                job_title.append(job['displayName'])
+                job_status.append(job['lastBuild']['result'])
+                checked_at.append(current_time)
 
             db_data = zip(job_title, job_status, checked_at)
-            JobRepository.insert(db_data)
-
+            JobRepository.insert(self, db_data)
+            print "Finished probing jobs"
         except Exception as e:
-            raise
+            print 'Opps, something went wrong: ', e
 
-probe = new Probe()
+probe = Probe()
 probe.checkJobs()
