@@ -8,5 +8,5 @@ class Jenkins(object):
         response = json.loads(requests.get(self.uri).text)
 
         if response.has_key('jobs') and len(response['jobs']) > 0:
-            return response['jobs'][0:3]
+            return response['jobs']
         raise Exception('No jobs found.')
