@@ -1,4 +1,4 @@
-# python-jenkins
+# Jenkins-jobs
 A python scripts to list Jenkins jobs
 
 # How to run script
